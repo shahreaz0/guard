@@ -1,0 +1,35 @@
+{
+  "name": "guard",
+  "version": "0.0.1",
+  "description": "A authenticatiion microservice",
+  "main": "server.ts",
+  "scripts": {
+    "dev": "nodemon src/server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shahreaz0/guard.git"
+  },
+  "keywords": [
+    "authentication",
+    "auth",
+    "ts"
+  ],
+  "author": "shahreaz",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/shahreaz0/guard/issues"
+  },
+  "homepage": "https://github.com/shahreaz0/guard#readme",
+  "dependencies": {
+    "config": "^3.3.7",
+    "express": "^4.18.1",
+    "js-yaml": "^4.1.0"
+  },
+  "devDependencies": {
+    "@types/config": "^0.0.41",
+    "@types/express": "^4.17.13",
+    "pm2": "^5.2.0",
+    "ts-node": "^10.9.1"
+  }
+}
