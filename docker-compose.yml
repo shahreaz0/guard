@@ -1,0 +1,14 @@
+version: "3.8"
+
+services:
+  server:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: guard_c
+    image: guard
+    volumes:
+      - .:/app
+      - /app/node_modules
+    ports:
+      - 9119:9119

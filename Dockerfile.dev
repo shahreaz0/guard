@@ -1,0 +1,16 @@
+FROM node:18-alpine
+
+WORKDIR /app
+
+RUN npm i -g nodemon typescript
+
+COPY package*.json ./
+
+RUN npm i 
+
+COPY . . 
+
+EXPOSE 9119
+
+CMD ["nodemon", "src/server.ts"]
+
