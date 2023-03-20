@@ -1,17 +1,15 @@
 import express from "express"
 import dotenv from "dotenv"
-import logger from "./utils/logger"
 import morgan from "morgan"
+import logger from "./utils/logger"
+import router from "./routes"
 
 dotenv.config()
 
 // express config
 const app = express()
 app.use(morgan("tiny"))
-
-app.get("/", (req, res) => {
-  res.send({ message: "OK" })
-})
+app.use("/api/v1", router)
 
 app.listen(process.env.PORT, () => {
   // eslint-disable-next-line no-console
