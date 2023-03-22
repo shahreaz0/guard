@@ -15,4 +15,5 @@ rules:
   no-console: warn
   no-duplicate-imports: error
   no-var: error
-  eqeqeq: "error"
+  eqeqeq: error
+  "@typescript-eslint/no-explicit-any": false

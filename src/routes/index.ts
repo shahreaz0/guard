@@ -1,8 +1,8 @@
 import express from "express"
 const router = express.Router()
 
-import user from "./user.routes"
-import auth from "./auth.routes"
+import user from "./user.route"
+import auth from "./auth.route"
 
 router.get("/healthcheck", (_, res) => {
   res.send({ message: "OK" })
