@@ -1,10 +1,9 @@
 import express from "express"
 import dotenv from "dotenv"
 import morgan from "morgan"
-import logger from "./utils/logger"
 import router from "./routes"
-
-import connectDb from "../utils/connect"
+import logger from "./utils/logger"
+import connectDb from "./utils/connect"
 
 dotenv.config()
 
