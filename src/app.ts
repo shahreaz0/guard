@@ -9,6 +9,7 @@ dotenv.config()
 
 // express config
 const app = express()
+app.use(express.json())
 app.use(morgan("tiny"))
 app.use("/api/v1", router)
 
