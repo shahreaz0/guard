@@ -22,4 +22,15 @@ export const createUserSchema = z.object({
     }),
 })
 
-export type CreateUserInput = z.TypeOf<typeof createUserSchema>["body"]
+export const verifyUserSchema = z.object({
+  body: z.object({
+    verification_code: z.string({
+      required_error: "Verfication code is required",
+    }),
+    id: z.string({ required_error: "ID is required" }),
+  }),
+})
+
+export type VerifyUserInput = z.infer<typeof verifyUserSchema>["body"]
+
+export type CreateUserInput = z.infer<typeof createUserSchema>["body"]
