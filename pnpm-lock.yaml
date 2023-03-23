@@ -5,6 +5,7 @@ specifiers:
   '@types/express': ^4.17.17
   '@types/morgan': ^1.9.4
   '@types/node': ^18.15.3
+  '@types/nodemailer': ^6.4.7
   '@typescript-eslint/eslint-plugin': ^5.55.0
   '@typescript-eslint/parser': ^5.55.0
   argon2: ^0.30.3
@@ -14,6 +15,7 @@ specifiers:
   express: ^4.18.2
   mongoose: ^7.0.2
   morgan: ^1.10.0
+  nodemailer: ^6.9.1
   pino: ^8.11.0
   pino-pretty: ^10.0.0
   prettier: ^2.8.4
@@ -23,11 +25,13 @@ specifiers:
 
 dependencies:
   '@typegoose/typegoose': 10.3.3_mongoose@7.0.2
+  '@types/nodemailer': 6.4.7
   argon2: 0.30.3
   dotenv: 16.0.3
   express: 4.18.2
   mongoose: 7.0.2
   morgan: 1.10.0
+  nodemailer: 6.9.1
   pino: 8.11.0
   pino-pretty: 10.0.0
   zod: 3.21.4
@@ -246,6 +250,12 @@ packages:
 
   /@types/node/18.15.3:
     resolution: {integrity: sha512-p6ua9zBxz5otCmbpb5D3U4B5Nanw6Pk3PPyX05xnxbB/fRv71N7CPmORg7uAD5P70T0xmx1pzAx/FUfa5X+3cw==}
+
+  /@types/nodemailer/6.4.7:
+    resolution: {integrity: sha512-f5qCBGAn/f0qtRcd4SEn88c8Fp3Swct1731X4ryPKqS61/A3LmmzN8zaEz7hneJvpjFbUUgY7lru/B/7ODTazg==}
+    dependencies:
+      '@types/node': 18.15.3
+    dev: false
 
   /@types/qs/6.9.7:
     resolution: {integrity: sha512-FGa1F62FT09qcrueBA6qYTrJPVDzah9a+493+o2PCXsesWHIn27G98TsSMs3WPNbZIEj4+VJf6saSFpvD+3Zsw==}
@@ -1613,6 +1623,11 @@ packages:
         optional: true
     dependencies:
       whatwg-url: 5.0.0
+    dev: false
+
+  /nodemailer/6.9.1:
+    resolution: {integrity: sha512-qHw7dOiU5UKNnQpXktdgQ1d3OFgRAekuvbJLcdG5dnEo/GtcTHRYM7+UfJARdOFU9WUQO8OiIamgWPmiSFHYAA==}
+    engines: {node: '>=6.0.0'}
     dev: false
 
   /nopt/5.0.0:

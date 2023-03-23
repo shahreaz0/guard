@@ -1,9 +1,9 @@
 import type { Request, Response } from "express"
 import { CreateUserInput } from "../schemas/user.schema"
 import logger from "../utils/logger"
-import mongoose from "mongoose"
 import { createUser } from "../services/user.service"
-import { number } from "zod"
+
+import { sendEmail } from "../utils/mailer"
 
 export async function createUserHandler(
   req: Request<{}, {}, CreateUserInput>,
@@ -11,6 +11,13 @@ export async function createUserHandler(
 ) {
   try {
     const user = await createUser(req.body)
+
+    await sendEmail({
+      from: "ashahreaz@gmail.com",
+      to: user.email,
+      subject: "Verify your account",
+      text: `Verification code: ${user.verification_code} | User ID: ${user.email}`,
+    })
 
     res.send({
       message: "success",
