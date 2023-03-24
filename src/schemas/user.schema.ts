@@ -12,13 +12,13 @@ export const createUserSchema = z.object({
         .string({ required_error: "Password is required" })
         .min(6, "Password is too short - should be min 6 chars"),
 
-      confirmPassword: z.string({
+      confirm_password: z.string({
         required_error: "Password confirmation is required",
       }),
     })
-    .refine((data) => data.password === data.confirmPassword, {
+    .refine((data) => data.password === data.confirm_password, {
       message: "Password must be match",
-      path: ["confirmPassword"],
+      path: ["confirm_password"],
     }),
 })
 

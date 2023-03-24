@@ -4,7 +4,7 @@ import type {
   VerifyUserInput,
   ForgotPasswordInput,
 } from "../schemas/user.schema"
-import logger from "../utils/logger"
+import log from "../utils/logger"
 import * as services from "../services/user.service"
 
 import { sendEmail } from "../utils/mailer"
@@ -30,7 +30,7 @@ export async function createUserHandler(
       data: user,
     })
   } catch (error: any) {
-    logger.warn(error)
+    log.warn(error)
 
     if (error.code === 11000)
       return res.status(409).send({ message: "Account already exists" })
@@ -93,7 +93,7 @@ export async function forgotPasswordHandler(
     res.send({ message: "Check your mail" })
   } catch (error) {
     //
-    logger.error(error)
+    log.error(error)
     if (error instanceof Error) {
       res.status(500).send({ message: error.message })
     }

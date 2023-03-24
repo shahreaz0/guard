@@ -1,5 +1,5 @@
 import nodemailer, { SendMailOptions } from "nodemailer"
-import logger from "./logger"
+import log from "./logger"
 
 async function createTestAccount() {
   const testAcc = await nodemailer.createTestAccount()
@@ -21,9 +21,9 @@ const transporter = nodemailer.createTransport(smtp)
 export async function sendEmail(payload: SendMailOptions) {
   try {
     let info = await transporter.sendMail(payload)
-    logger.info(info.messageId)
-    logger.info(nodemailer.getTestMessageUrl(info))
+    log.info(info.messageId)
+    log.info(nodemailer.getTestMessageUrl(info))
   } catch (error) {
-    logger.error(error)
+    log.error(error)
   }
 }

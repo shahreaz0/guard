@@ -6,10 +6,11 @@ import {
   pre,
   DocumentType,
 } from "@typegoose/typegoose"
-import crypto from "node:crypto"
 import * as argon2 from "argon2"
 
-import logger from "../utils/logger"
+import { generateRandomCode } from "../utils/helpers"
+
+import log from "../utils/logger"
 
 @pre<User>("save", async function () {
   if (!this.isModified("password")) return
@@ -41,7 +42,7 @@ export class User {
   @prop({ required: true })
   password?: string
 
-  @prop({ default: crypto.randomBytes(6).toString("base64").toUpperCase() })
+  @prop({ default: generateRandomCode() })
   verification_code?: string
 
   @prop()
@@ -54,7 +55,7 @@ export class User {
     try {
       return await argon2.verify(this.password as string, candidatePassword)
     } catch (error) {
-      logger.error(error instanceof Error && error.message)
+      log.error(error instanceof Error && error.message)
       return false
     }
   }

@@ -1,13 +1,13 @@
 import mongoose from "mongoose"
-import logger from "./logger"
+import log from "./logger"
 
 export default async function connectDb() {
   try {
     await mongoose.connect(process.env.MONGO_URI as string)
-    logger.info("Database connected!!")
+    log.info("Database connected!!")
   } catch (error) {
     if (error instanceof mongoose.Error) {
-      logger.error(error.message)
+      log.error(error.message)
       process.exit(1)
     }
   }
