@@ -16,4 +16,10 @@ router.post(
   userController.verifyUserHandler
 )
 
+router.post(
+  "/users/forgotpassword",
+  validateResource(schemas.forgotPasswordSchema),
+  userController.forgotPasswordHandler
+)
+
 export default router

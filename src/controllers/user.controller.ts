@@ -1,9 +1,15 @@
 import type { Request, Response } from "express"
-import type { CreateUserInput, VerifyUserInput } from "../schemas/user.schema"
+import type {
+  CreateUserInput,
+  VerifyUserInput,
+  ForgotPasswordInput,
+} from "../schemas/user.schema"
 import logger from "../utils/logger"
 import * as services from "../services/user.service"
 
 import { sendEmail } from "../utils/mailer"
+
+import { generateRandomCode } from "../utils/helpers"
 
 export async function createUserHandler(
   req: Request<{}, {}, CreateUserInput>,
@@ -55,6 +61,41 @@ export async function verifyUserHandler(
   } catch (error) {
     if (error instanceof Error) {
       res.status(400).send({ message: error.message })
+    }
+  }
+}
+
+export async function forgotPasswordHandler(
+  req: Request<{}, {}, ForgotPasswordInput>,
+  res: Response
+) {
+  try {
+    const user = await services.findUserByEmail(req.body.email)
+
+    if (!user) {
+      return res.status(400).send({ message: "Try again" })
+    }
+
+    if (!user.verified)
+      return res.status(400).send({ message: "User is not verified" })
+
+    user.password_reset_code = generateRandomCode()
+
+    await user.save()
+
+    await sendEmail({
+      from: "shahreaz@gmail.com",
+      to: req.body.email,
+      subject: "Reset your password",
+      text: `Password reset code: ${user.password_reset_code} | userId: ${user._id}`,
+    })
+
+    res.send({ message: "Check your mail" })
+  } catch (error) {
+    //
+    logger.error(error)
+    if (error instanceof Error) {
+      res.status(500).send({ message: error.message })
     }
   }
 }
