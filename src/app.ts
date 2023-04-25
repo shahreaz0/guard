@@ -4,8 +4,24 @@ import morgan from "morgan"
 import router from "./routes"
 import log from "./utils/logger"
 import connectDb from "./utils/connect"
+import { z } from "zod"
 
 dotenv.config()
+
+const envVars = z.object({
+  PORT: z.string(),
+  MONGO_URI: z.string(),
+  ACCESS_TOKEN_SECRET: z.string(),
+  REFRESH_TOKEN_SECRET: z.string(),
+})
+
+envVars.parse(process.env)
+
+declare global {
+  namespace NodeJS {
+    interface ProcessEnv extends z.infer<typeof envVars> {}
+  }
+}
 
 // express config
 const app = express()
