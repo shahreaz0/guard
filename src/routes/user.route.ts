@@ -22,4 +22,10 @@ router.post(
   userController.forgotPasswordHandler
 )
 
+router.post(
+  "/users/resetpassword/:id/:reset_password_code",
+  validateResource(schemas.resetPasswordSchema),
+  userController.resetPasswordHandler
+)
+
 export default router

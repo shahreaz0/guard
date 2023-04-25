@@ -1,5 +1,3 @@
-import crypto from "node:crypto"
-
 export function generateRandomCode() {
-  return crypto.randomBytes(8).toString("base64").toUpperCase()
+  return Math.random().toString(36).slice(2, 10).toUpperCase()
 }

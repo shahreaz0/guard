@@ -6,13 +6,15 @@ async function createTestAccount() {
   console.log(testAcc)
 }
 
+// createTestAccount()
+
 const smtp = {
   host: "smtp.ethereal.email",
   port: 587,
   secure: false,
   auth: {
-    user: "o4rk2oenchmffoqf@ethereal.email",
-    pass: "jTy3ySv8MQfvbU2hAW",
+    user: "l7lnsz7iygjdmejr@ethereal.email",
+    pass: "a9E2tB9ZXDXxyQdSVY",
   },
 }
 

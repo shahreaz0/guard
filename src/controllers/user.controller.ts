@@ -3,6 +3,7 @@ import type {
   CreateUserInput,
   VerifyUserInput,
   ForgotPasswordInput,
+  ResetPasswordInput,
 } from "../schemas/user.schema"
 import log from "../utils/logger"
 import * as services from "../services/user.service"
@@ -98,4 +99,27 @@ export async function forgotPasswordHandler(
       res.status(500).send({ message: error.message })
     }
   }
+}
+
+export async function resetPasswordHandler(
+  req: Request<ResetPasswordInput["params"], {}, ResetPasswordInput["body"]>,
+  res: Response
+) {
+  const user = await services.findUserById(req.params.id)
+
+  if (
+    !user ||
+    !user.password_reset_code ||
+    req.params.reset_password_code !== user.password_reset_code
+  ) {
+    return res.status(400).send({ message: "Could not reset password" })
+  }
+
+  user.password_reset_code = null
+
+  user.password = req.body.password
+
+  await user.save()
+
+  res.send({ message: "Successfully updated password" })
 }

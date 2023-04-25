@@ -31,6 +31,28 @@ export const verifyUserSchema = z.object({
   }),
 })
 
+export const resetPasswordSchema = z.object({
+  params: z.object({
+    id: z.string(),
+    reset_password_code: z.string(),
+  }),
+
+  body: z
+    .object({
+      password: z
+        .string({ required_error: "Password is required" })
+        .min(6, "Password is too short - should be min 6 chars"),
+
+      confirm_password: z.string({
+        required_error: "Password confirmation is required",
+      }),
+    })
+    .refine((data) => data.password === data.confirm_password, {
+      message: "Password must be match",
+      path: ["confirm_password"],
+    }),
+})
+
 export const forgotPasswordSchema = z.object({
   body: z.object({
     email: z
@@ -38,6 +60,8 @@ export const forgotPasswordSchema = z.object({
       .email("Email must be valid"),
   }),
 })
+
+export type ResetPasswordInput = z.infer<typeof resetPasswordSchema>
 
 export type ForgotPasswordInput = z.infer<typeof forgotPasswordSchema>["body"]
 
