@@ -53,7 +53,12 @@ export class User {
 
   async validatePassword(this: DocumentType<User>, candidatePassword: string) {
     try {
-      return await argon2.verify(this.password as string, candidatePassword)
+      const valid = await argon2.verify(
+        this.password as string,
+        candidatePassword
+      )
+
+      return valid
     } catch (error) {
       log.error(error instanceof Error && error.message)
       return false
