@@ -28,4 +28,6 @@ router.post(
   userController.resetPasswordHandler
 )
 
+router.get("/users/me", userController.getCurrentUserHandler)
+
 export default router

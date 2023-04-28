@@ -5,9 +5,9 @@ import router from "./routes"
 import log from "./utils/logger"
 import connectDb from "./utils/connect"
 import { z } from "zod"
-
+import deserializeUser from "./middlewares/deserialize-user"
+// setup envs
 dotenv.config()
-
 const envVars = z.object({
   PORT: z.string(),
   MONGO_URI: z.string(),
@@ -27,10 +27,10 @@ declare global {
 const app = express()
 app.use(express.json())
 app.use(morgan("tiny"))
+app.use(deserializeUser)
 app.use("/api/v1", router)
 
 app.listen(process.env.PORT, () => {
-  // eslint-disable-next-line no-console
   log.info(`http://localhost:${process.env.PORT}`)
   connectDb()
 })

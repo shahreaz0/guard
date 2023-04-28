@@ -7,14 +7,12 @@ import * as schemas from "../schemas/auth.schema"
 
 import validateResource from "../middlewares/validate-resource"
 
-router.get("/auth", (_, res) => {
-  res.send({ message: "auth" })
-})
-
 router.post(
-  "/login",
+  "/sessions/login",
   validateResource(schemas.loginSchema),
   authController.loginHandler
 )
+
+router.post("/sessions/refresh", authController.refreshAccessTokenHandler)
 
 export default router

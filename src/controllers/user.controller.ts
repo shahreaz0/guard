@@ -27,8 +27,7 @@ export async function createUserHandler(
     })
 
     res.send({
-      message: "success",
-      data: user,
+      message: "Please check your email and verify your account",
     })
   } catch (error: any) {
     log.warn(error)
@@ -122,4 +121,11 @@ export async function resetPasswordHandler(
   await user.save()
 
   res.send({ message: "Successfully updated password" })
+}
+
+export function getCurrentUserHandler(
+  req: Request,
+  res: Response<{}, { user: any }>
+) {
+  res.send(res.locals.user)
 }

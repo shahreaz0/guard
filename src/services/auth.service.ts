@@ -42,3 +42,7 @@ export async function signRefreshToken({ userId }: { userId: string }) {
     return null
   }
 }
+
+export async function findSessionById(sessionId: string) {
+  return SessionModel.findById(sessionId)
+}
