@@ -1,60 +1,91 @@
 import { Request, Response } from "express"
 import type { LoginInput } from "../schemas/auth.schema"
 import { findUserByEmail, findUserById } from "../services/user.service"
+
 import {
   signAccessToken,
   signRefreshToken,
   findSessionById,
+  deleteSessionById,
 } from "../services/auth.service"
-import { signJwt, verifyJwt } from "../utils/jwt"
+import { verifyJwt } from "../utils/jwt"
 
-export async function loginHandler(
+export async function loginUserHandler(
   req: Request<{}, {}, LoginInput>,
   res: Response
 ) {
-  const message = "Invalid username or password"
+  try {
+    const message = "Invalid username or password"
 
-  const user = await findUserByEmail(req.body.email)
+    const user = await findUserByEmail(req.body.email)
 
-  if (!user) return res.status(400).send({ message })
+    if (!user) return res.status(400).send({ message })
 
-  if (!user.verified)
-    return res.status(400).send({ message: "Please verifiy your account" })
+    if (!user.verified)
+      return res.status(400).send({ message: "Please verifiy your account" })
 
-  const validPassword = await user.validatePassword(req.body.password)
+    const validPassword = await user.validatePassword(req.body.password)
 
-  if (!validPassword) return res.status(400).send({ message })
+    if (!validPassword) return res.status(400).send({ message })
 
-  const accessToken = signAccessToken(user)
+    const accessToken = signAccessToken(user)
 
-  const refreshToken = await signRefreshToken({ userId: user.id })
+    const refreshToken = await signRefreshToken({ userId: user.id })
 
-  if (!refreshToken) return res.send({ message: "Please try again" })
+    if (!refreshToken) return res.send({ message: "Please try again" })
 
-  res.send({ access_token: accessToken, refresh_token: refreshToken })
+    res.send({ access_token: accessToken, refresh_token: refreshToken })
+  } catch (error: any) {
+    res.status(500).send({ message: error.message })
+  }
 }
 
 export async function refreshAccessTokenHandler(req: Request, res: Response) {
-  const token = req.headers["x-refresh"] as string
+  try {
+    const token = req.headers["x-refresh"] as string
 
-  if (!token) return res.status(401).send({ message: "Provide token" })
+    if (!token) return res.status(401).send({ message: "Provide token" })
 
-  const decoded = verifyJwt<{ sessionId: string }>(token, "refresh")
+    const decoded = verifyJwt<{ sessionId: string }>(token, "refresh")
 
-  if (!decoded)
-    return res.status(401).send({ message: "Could not generate token" })
+    if (!decoded)
+      return res.status(401).send({ message: "Could not generate token" })
 
-  const session = await findSessionById(decoded.sessionId)
+    const session = await findSessionById(decoded.sessionId)
 
-  if (!session || !session.valid)
-    return res.status(401).send({ message: "Could not generate token" })
+    if (!session || !session.valid)
+      return res.status(401).send({ message: "Could not generate token" })
 
-  const user = await findUserById(String(session.user))
+    const user = await findUserById(String(session.user))
 
-  if (!user)
-    return res.status(401).send({ message: "Could not generate token" })
+    if (!user)
+      return res.status(401).send({ message: "Could not generate token" })
 
-  const accessToken = signAccessToken(user)
+    const accessToken = signAccessToken(user)
 
-  res.send({ access_token: accessToken })
+    res.send({ access_token: accessToken })
+  } catch (error: any) {
+    res.status(500).send({ message: error.message })
+  }
+}
+
+export async function logoutUserHandler(
+  req: Request,
+  res: Response<{}, { user: { first_name: string } }>
+) {
+  try {
+    const token = req.headers["x-refresh"] as string
+
+    if (!token) return res.status(401).send({ message: "Provide token" })
+
+    const decoded = verifyJwt<{ sessionId: string }>(token, "refresh")
+
+    if (!decoded) return res.status(401).send({ message: "Could not logout" })
+
+    await deleteSessionById(decoded.sessionId)
+
+    res.send({ message: "Logged out " + res.locals.user.first_name })
+  } catch (error: any) {
+    res.status(500).send({ message: error.message })
+  }
 }

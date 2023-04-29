@@ -18,7 +18,7 @@ export function signAccessToken(user: DocumentType<User>) {
   } = user.toJSON()
 
   return signJwt(rest, "access", {
-    expiresIn: "30m",
+    expiresIn: "15m",
   })
 }
 
@@ -43,6 +43,10 @@ export async function signRefreshToken({ userId }: { userId: string }) {
   }
 }
 
-export async function findSessionById(sessionId: string) {
+export function findSessionById(sessionId: string) {
   return SessionModel.findById(sessionId)
+}
+
+export function deleteSessionById(sessionId: string) {
+  return SessionModel.deleteOne({ _id: sessionId })
 }

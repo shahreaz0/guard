@@ -3,6 +3,7 @@ const router = express.Router()
 import * as userController from "../controllers/user.controller"
 import validateResource from "../middlewares/validate-resource"
 import * as schemas from "../schemas/user.schema"
+import requireUser from "../middlewares/require-user"
 
 router.post(
   "/users",
@@ -28,6 +29,6 @@ router.post(
   userController.resetPasswordHandler
 )
 
-router.get("/users/me", userController.getCurrentUserHandler)
+router.get("/users/me", requireUser, userController.getCurrentUserHandler)
 
 export default router
