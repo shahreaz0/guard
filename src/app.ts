@@ -3,6 +3,9 @@ import dotenv from "dotenv"
 import morgan from "morgan"
 import CreateHttpError from "http-errors"
 import { z } from "zod"
+import helmet from "helmet"
+import cors from "cors"
+import compression from "compression"
 
 // router
 import router from "./routes"
@@ -37,8 +40,13 @@ declare global {
 const app = express()
 app.use(express.json())
 app.use(morgan("tiny"))
+app.use(helmet())
+app.use(compression())
+app.use(cors())
 app.use(deserializeUser)
 app.use("/api/v1", router)
+
+app.disable("x-powered-by")
 
 app.use((_req, _res, next) => {
   next(CreateHttpError.NotFound())
