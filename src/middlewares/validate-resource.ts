@@ -1,5 +1,6 @@
 import { z, AnyZodObject, ZodError } from "zod"
 import type { Request, Response, NextFunction } from "express"
+import createHttpError from "http-errors"
 import log from "../utils/logger"
 const validateResource =
   (schema: AnyZodObject) =>
@@ -14,7 +15,7 @@ const validateResource =
     } catch (error) {
       if (error instanceof ZodError) {
         log.error(error.message)
-        res.status(400).send({ message: error.issues[0].message })
+        next(createHttpError.BadRequest(error.issues[0].message))
       }
     }
   }

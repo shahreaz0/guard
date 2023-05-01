@@ -1,11 +1,21 @@
-import express from "express"
+import express, { ErrorRequestHandler } from "express"
 import dotenv from "dotenv"
 import morgan from "morgan"
-import router from "./routes"
-import log from "./utils/logger"
-import connectDb from "./utils/connect"
+import CreateHttpError from "http-errors"
 import { z } from "zod"
+
+// router
+import router from "./routes"
+
+// logger
+import log from "./utils/logger"
+
+// db
+import connectDb from "./utils/connect"
+
+// middlewares
 import deserializeUser from "./middlewares/deserialize-user"
+
 // setup envs
 dotenv.config()
 const envVars = z.object({
@@ -29,6 +39,19 @@ app.use(express.json())
 app.use(morgan("tiny"))
 app.use(deserializeUser)
 app.use("/api/v1", router)
+
+app.use((_req, _res, next) => {
+  next(CreateHttpError.NotFound())
+})
+
+app.use(((err, _req, res, next) => {
+  res.status(err.status || 500)
+
+  res.send({
+    status: err.status || 500,
+    message: err.message,
+  })
+}) as ErrorRequestHandler)
 
 app.listen(process.env.PORT, () => {
   log.info(`http://localhost:${process.env.PORT}`)

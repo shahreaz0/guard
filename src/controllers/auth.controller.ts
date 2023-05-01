@@ -1,6 +1,8 @@
-import { Request, Response } from "express"
+import { NextFunction, Request, Response } from "express"
 import type { LoginInput } from "../schemas/auth.schema"
 import { findUserByEmail, findUserById } from "../services/user.service"
+
+import createHttpError from "http-errors"
 
 import {
   signAccessToken,
@@ -12,21 +14,22 @@ import { verifyJwt } from "../utils/jwt"
 
 export async function loginUserHandler(
   req: Request<{}, {}, LoginInput>,
-  res: Response
+  res: Response,
+  next: NextFunction
 ) {
   try {
     const message = "Invalid username or password"
 
     const user = await findUserByEmail(req.body.email)
 
-    if (!user) return res.status(400).send({ message })
+    if (!user) throw createHttpError.BadRequest(message)
 
     if (!user.verified)
-      return res.status(400).send({ message: "Please verifiy your account" })
+      throw createHttpError.BadRequest("Please verifiy your account")
 
     const validPassword = await user.validatePassword(req.body.password)
 
-    if (!validPassword) return res.status(400).send({ message })
+    if (!validPassword) throw createHttpError.BadRequest(message)
 
     const accessToken = signAccessToken(user)
 
@@ -35,57 +38,60 @@ export async function loginUserHandler(
     if (!refreshToken) return res.send({ message: "Please try again" })
 
     res.send({ access_token: accessToken, refresh_token: refreshToken })
-  } catch (error: any) {
-    res.status(500).send({ message: error.message })
+  } catch (error) {
+    next(error)
   }
 }
 
-export async function refreshAccessTokenHandler(req: Request, res: Response) {
+export async function refreshAccessTokenHandler(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
   try {
     const token = req.headers["x-refresh"] as string
 
-    if (!token) return res.status(401).send({ message: "Provide token" })
+    if (!token) throw createHttpError.BadRequest("Provide token")
 
     const decoded = verifyJwt<{ sessionId: string }>(token, "refresh")
 
-    if (!decoded)
-      return res.status(401).send({ message: "Could not generate token" })
+    if (!decoded) throw createHttpError.Unauthorized("Could not generate token")
 
     const session = await findSessionById(decoded.sessionId)
 
     if (!session || !session.valid)
-      return res.status(401).send({ message: "Could not generate token" })
+      throw createHttpError.Unauthorized("Could not generate token")
 
     const user = await findUserById(String(session.user))
 
-    if (!user)
-      return res.status(401).send({ message: "Could not generate token" })
+    if (!user) throw createHttpError.Unauthorized("Could not generate token")
 
     const accessToken = signAccessToken(user)
 
     res.send({ access_token: accessToken })
-  } catch (error: any) {
-    res.status(500).send({ message: error.message })
+  } catch (error) {
+    next(error)
   }
 }
 
 export async function logoutUserHandler(
   req: Request,
-  res: Response<{}, { user: { first_name: string } }>
+  res: Response<{}, { user: { first_name: string } }>,
+  next: NextFunction
 ) {
   try {
     const token = req.headers["x-refresh"] as string
 
-    if (!token) return res.status(401).send({ message: "Provide token" })
+    if (!token) throw createHttpError.BadRequest("Provide token")
 
     const decoded = verifyJwt<{ sessionId: string }>(token, "refresh")
 
-    if (!decoded) return res.status(401).send({ message: "Could not logout" })
+    if (!decoded) throw createHttpError.Unauthorized("Could not logout")
 
     await deleteSessionById(decoded.sessionId)
 
     res.send({ message: "Logged out " + res.locals.user.first_name })
-  } catch (error: any) {
-    res.status(500).send({ message: error.message })
+  } catch (error) {
+    next(error)
   }
 }
