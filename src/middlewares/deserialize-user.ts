@@ -1,18 +1,22 @@
 import { Request, Response, NextFunction } from "express"
 import { verifyJwt } from "../utils/jwt"
 
-export default function deserializeUser(
+export default async function deserializeUser(
   req: Request,
   res: Response,
   next: NextFunction
 ) {
-  const token = (req.headers.authorization || "").split(" ")[1]
+  try {
+    const token = (req.headers.authorization || "").split(" ")[1]
 
-  if (!token) return next()
+    if (!token) return next()
 
-  const decoded = verifyJwt(token, "access")
+    const decoded = await verifyJwt(token, "access")
 
-  res.locals.user = decoded
+    res.locals.user = decoded
 
-  return next()
+    return next()
+  } catch (error) {
+    next(error)
+  }
 }

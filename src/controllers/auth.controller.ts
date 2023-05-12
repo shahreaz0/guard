@@ -31,7 +31,7 @@ export async function loginUserHandler(
 
     if (!validPassword) throw createHttpError.BadRequest(message)
 
-    const accessToken = signAccessToken(user)
+    const accessToken = await signAccessToken(user)
 
     const refreshToken = await signRefreshToken({ userId: user.id })
 
@@ -53,7 +53,7 @@ export async function refreshAccessTokenHandler(
 
     if (!token) throw createHttpError.BadRequest("Provide token")
 
-    const decoded = verifyJwt<{ sessionId: string }>(token, "refresh")
+    const decoded = await verifyJwt<{ sessionId: string }>(token, "refresh")
 
     if (!decoded) throw createHttpError.Unauthorized("Could not generate token")
 
@@ -66,7 +66,7 @@ export async function refreshAccessTokenHandler(
 
     if (!user) throw createHttpError.Unauthorized("Could not generate token")
 
-    const accessToken = signAccessToken(user)
+    const accessToken = await signAccessToken(user)
 
     res.send({ access_token: accessToken })
   } catch (error) {
@@ -84,7 +84,7 @@ export async function logoutUserHandler(
 
     if (!token) throw createHttpError.BadRequest("Provide token")
 
-    const decoded = verifyJwt<{ sessionId: string }>(token, "refresh")
+    const decoded = await verifyJwt<{ sessionId: string }>(token, "refresh")
 
     if (!decoded) throw createHttpError.Unauthorized("Could not logout")
 

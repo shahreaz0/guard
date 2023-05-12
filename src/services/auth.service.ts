@@ -4,11 +4,19 @@ import { User } from "../models/user.model"
 import { signJwt } from "../utils/jwt"
 import SessionModel from "../models/session.model"
 
-function createSession(userId: string) {
+export function createSession(userId: string) {
   return SessionModel.create({ user: userId })
 }
 
-export function signAccessToken(user: DocumentType<User>) {
+export function findSessionById(sessionId: string) {
+  return SessionModel.findById(sessionId)
+}
+
+export function deleteSessionById(sessionId: string) {
+  return SessionModel.deleteOne({ _id: sessionId })
+}
+
+export async function signAccessToken(user: DocumentType<User>) {
   const {
     verification_code,
     password_reset_code,
@@ -17,9 +25,15 @@ export function signAccessToken(user: DocumentType<User>) {
     ...rest
   } = user.toJSON()
 
-  return signJwt(rest, "access", {
-    expiresIn: "15m",
-  })
+  try {
+    const token = await signJwt(rest, "access", {
+      expiresIn: "15m",
+    })
+
+    return token
+  } catch (error) {
+    throw error
+  }
 }
 
 export async function signRefreshToken({ userId }: { userId: string }) {
@@ -30,23 +44,19 @@ export async function signRefreshToken({ userId }: { userId: string }) {
 
     if (!oldSession) {
       const session = await createSession(userId)
-      return signJwt({ sessionId: session._id }, "refresh", {
+      const token = await signJwt({ sessionId: session._id }, "refresh", {
         expiresIn: "30d",
       })
+
+      return token
     }
 
-    return signJwt({ sessionId: oldSession._id }, "refresh", {
+    const token = await signJwt({ sessionId: oldSession._id }, "refresh", {
       expiresIn: "30d",
     })
+
+    return token
   } catch (error) {
     return null
   }
-}
-
-export function findSessionById(sessionId: string) {
-  return SessionModel.findById(sessionId)
-}
-
-export function deleteSessionById(sessionId: string) {
-  return SessionModel.deleteOne({ _id: sessionId })
 }
