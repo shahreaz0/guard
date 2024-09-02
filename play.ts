@@ -1,4 +1,3 @@
-export {}
 import argon2 from "argon2"
 ;(async () => {
   const hash =

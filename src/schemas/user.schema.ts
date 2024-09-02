@@ -3,9 +3,7 @@ import { z } from "zod"
 export const createUserSchema = z.object({
   body: z
     .object({
-      email: z
-        .string({ required_error: "Email is required" })
-        .email("Email must be valid"),
+      email: z.string({ required_error: "Email is required" }).email("Email must be valid"),
       first_name: z.string({ required_error: "First name is required" }),
       last_name: z.string({ required_error: "Last name is required" }),
       password: z
@@ -55,9 +53,7 @@ export const resetPasswordSchema = z.object({
 
 export const forgotPasswordSchema = z.object({
   body: z.object({
-    email: z
-      .string({ required_error: "Email is required" })
-      .email("Email must be valid"),
+    email: z.string({ required_error: "Email is required" }).email("Email must be valid"),
   }),
 })
 

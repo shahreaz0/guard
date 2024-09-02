@@ -12,7 +12,7 @@ import requireUser from "../middlewares/require-user"
 router.post(
   "/sessions/login",
   validateResource(schemas.loginSchema),
-  authController.loginUserHandler
+  authController.loginUserHandler,
 )
 
 router.post("/sessions/refresh", authController.refreshAccessTokenHandler)

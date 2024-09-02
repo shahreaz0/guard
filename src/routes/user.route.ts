@@ -5,28 +5,24 @@ import validateResource from "../middlewares/validate-resource"
 import * as schemas from "../schemas/user.schema"
 import requireUser from "../middlewares/require-user"
 
-router.post(
-  "/users",
-  validateResource(schemas.createUserSchema),
-  userController.createUserHandler
-)
+router.post("/users", validateResource(schemas.createUserSchema), userController.createUserHandler)
 
 router.post(
   "/users/verify",
   validateResource(schemas.verifyUserSchema),
-  userController.verifyUserHandler
+  userController.verifyUserHandler,
 )
 
 router.post(
   "/users/forgotpassword",
   validateResource(schemas.forgotPasswordSchema),
-  userController.forgotPasswordHandler
+  userController.forgotPasswordHandler,
 )
 
 router.post(
   "/users/resetpassword/:id/:reset_password_code",
   validateResource(schemas.resetPasswordSchema),
-  userController.resetPasswordHandler
+  userController.resetPasswordHandler,
 )
 
 router.get("/users/me", requireUser, userController.getCurrentUserHandler)

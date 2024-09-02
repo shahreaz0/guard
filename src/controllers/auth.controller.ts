@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from "express"
+import type { NextFunction, Request, Response } from "express"
 import type { LoginInput } from "../schemas/auth.schema"
 import { findUserByEmail, findUserById } from "../services/user.service"
 
@@ -15,7 +15,7 @@ import { verifyJwt } from "../utils/jwt"
 export async function loginUserHandler(
   req: Request<{}, {}, LoginInput>,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) {
   try {
     const message = "Invalid username or password"
@@ -24,8 +24,7 @@ export async function loginUserHandler(
 
     if (!user) throw createHttpError.BadRequest(message)
 
-    if (!user.verified)
-      throw createHttpError.BadRequest("Please verifiy your account")
+    if (!user.verified) throw createHttpError.BadRequest("Please verifiy your account")
 
     const validPassword = await user.validatePassword(req.body.password)
 
@@ -43,11 +42,7 @@ export async function loginUserHandler(
   }
 }
 
-export async function refreshAccessTokenHandler(
-  req: Request,
-  res: Response,
-  next: NextFunction
-) {
+export async function refreshAccessTokenHandler(req: Request, res: Response, next: NextFunction) {
   try {
     const token = req.headers["x-refresh"] as string
 
@@ -59,8 +54,7 @@ export async function refreshAccessTokenHandler(
 
     const session = await findSessionById(decoded.sessionId)
 
-    if (!session || !session.valid)
-      throw createHttpError.Unauthorized("Could not generate token")
+    if (!session || !session.valid) throw createHttpError.Unauthorized("Could not generate token")
 
     const user = await findUserById(String(session.user))
 
@@ -77,7 +71,7 @@ export async function refreshAccessTokenHandler(
 export async function logoutUserHandler(
   req: Request,
   res: Response<{}, { user: { first_name: string } }>,
-  next: NextFunction
+  next: NextFunction,
 ) {
   try {
     const token = req.headers["x-refresh"] as string
@@ -90,7 +84,7 @@ export async function logoutUserHandler(
 
     await deleteSessionById(decoded.sessionId)
 
-    res.send({ message: "Logged out " + res.locals.user.first_name })
+    res.send({ message: `Logged out ${res.locals.user.first_name}` })
   } catch (error) {
     next(error)
   }

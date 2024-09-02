@@ -1,4 +1,4 @@
-import express, { ErrorRequestHandler } from "express"
+import express, { type ErrorRequestHandler } from "express"
 import dotenv from "dotenv"
 import morgan from "morgan"
 import CreateHttpError from "http-errors"

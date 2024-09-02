@@ -11,11 +11,10 @@ import * as services from "../services/user.service"
 import { sendEmail } from "../utils/mailer"
 
 import { generateRandomCode } from "../utils/helpers"
+import mongoose from "mongoose"
+import { User } from "../models/user.model"
 
-export async function createUserHandler(
-  req: Request<{}, {}, CreateUserInput>,
-  res: Response
-) {
+export async function createUserHandler(req: Request<{}, {}, CreateUserInput>, res: Response) {
   try {
     const user = await services.createUser(req.body)
 
@@ -29,20 +28,19 @@ export async function createUserHandler(
     res.send({
       message: "Please check your email and verify your account",
     })
-  } catch (error: any) {
+  } catch (error) {
     log.warn(error)
 
-    if (error.code === 11000)
-      return res.status(409).send({ message: "Account already exists" })
+    if (error instanceof mongoose.Error) {
+      // @ts-ignore
+      if (error.code === 11000) return res.status(409).send({ message: "Account already exists" })
 
-    res.status(500).send(error.message)
+      res.status(500).send(error.message)
+    }
   }
 }
 
-export async function verifyUserHandler(
-  req: Request<{}, {}, VerifyUserInput>,
-  res: Response
-) {
+export async function verifyUserHandler(req: Request<{}, {}, VerifyUserInput>, res: Response) {
   try {
     const user = await services.findUserById(req.body.id)
 
@@ -67,7 +65,7 @@ export async function verifyUserHandler(
 
 export async function forgotPasswordHandler(
   req: Request<{}, {}, ForgotPasswordInput>,
-  res: Response
+  res: Response,
 ) {
   try {
     const user = await services.findUserByEmail(req.body.email)
@@ -76,8 +74,7 @@ export async function forgotPasswordHandler(
       return res.status(400).send({ message: "Try again" })
     }
 
-    if (!user.verified)
-      return res.status(400).send({ message: "User is not verified" })
+    if (!user.verified) return res.status(400).send({ message: "User is not verified" })
 
     user.password_reset_code = generateRandomCode()
 
@@ -102,7 +99,7 @@ export async function forgotPasswordHandler(
 
 export async function resetPasswordHandler(
   req: Request<ResetPasswordInput["params"], {}, ResetPasswordInput["body"]>,
-  res: Response
+  res: Response,
 ) {
   const user = await services.findUserById(req.params.id)
 
@@ -125,7 +122,7 @@ export async function resetPasswordHandler(
 
 export function getCurrentUserHandler(
   req: Request,
-  res: Response<{}, { user: any }>
+  res: Response<Record<string, never>, { user: Record<string, never> }>,
 ) {
   res.send(res.locals.user)
 }

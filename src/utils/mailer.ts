@@ -1,4 +1,4 @@
-import nodemailer, { SendMailOptions } from "nodemailer"
+import nodemailer, { type SendMailOptions } from "nodemailer"
 import log from "./logger"
 
 async function createTestAccount() {
@@ -22,7 +22,7 @@ const transporter = nodemailer.createTransport(smtp)
 
 export async function sendEmail(payload: SendMailOptions) {
   try {
-    let info = await transporter.sendMail(payload)
+    const info = await transporter.sendMail(payload)
     log.info(info.messageId)
     log.info(nodemailer.getTestMessageUrl(info))
   } catch (error) {
