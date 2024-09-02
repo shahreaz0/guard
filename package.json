@@ -4,14 +4,13 @@
   "description": "",
   "main": "app.ts",
   "scripts": {
-    "dev": "tsnd --respawn src/app.ts"
+    "dev": "tsnd --respawn src/app.ts",
+    "typecheck": "tsc --noEmit"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@typegoose/typegoose": "^10.3.3",
-    "@types/nodemailer": "^6.4.7",
     "argon2": "^0.30.3",
     "compression": "^1.7.4",
     "cors": "^2.8.5",
@@ -20,7 +19,7 @@
     "helmet": "^6.1.5",
     "http-errors": "^2.0.0",
     "jsonwebtoken": "^9.0.0",
-    "mongoose": "^7.0.2",
+    "mongoose": "^8.6.0",
     "morgan": "^1.10.0",
     "nodemailer": "^6.9.1",
     "pino": "^8.11.0",
@@ -35,6 +34,7 @@
     "@types/jsonwebtoken": "^9.0.1",
     "@types/morgan": "^1.9.4",
     "@types/node": "^18.15.3",
+    "@types/nodemailer": "^6.4.15",
     "@typescript-eslint/eslint-plugin": "^5.55.0",
     "@typescript-eslint/parser": "^5.55.0",
     "eslint": "^8.36.0",

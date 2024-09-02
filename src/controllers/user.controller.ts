@@ -114,7 +114,7 @@ export async function resetPasswordHandler(
     return res.status(400).send({ message: "Could not reset password" })
   }
 
-  user.password_reset_code = null
+  user.password_reset_code = ""
 
   user.password = req.body.password
 

@@ -1,5 +1,4 @@
-import { DocumentType } from "@typegoose/typegoose"
-import { User } from "../models/user.model"
+import { UserDocument } from "../models/user.model"
 
 import { signJwt } from "../utils/jwt"
 import SessionModel from "../models/session.model"
@@ -16,14 +15,9 @@ export function deleteSessionById(sessionId: string) {
   return SessionModel.deleteOne({ _id: sessionId })
 }
 
-export async function signAccessToken(user: DocumentType<User>) {
-  const {
-    verification_code,
-    password_reset_code,
-    validatePassword,
-    password,
-    ...rest
-  } = user.toJSON()
+export async function signAccessToken(user: UserDocument) {
+  const { verification_code, password_reset_code, password, ...rest } =
+    user.toJSON()
 
   try {
     const token = await signJwt(rest, "access", {

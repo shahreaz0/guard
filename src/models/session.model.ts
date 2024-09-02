@@ -1,20 +1,26 @@
-import { prop, Ref, modelOptions, getModelForClass } from "@typegoose/typegoose"
-import { User } from "./user.model"
+import { InferSchemaType, Schema, model } from "mongoose"
 
-@modelOptions({
-  schemaOptions: {
+const sessionSchema = new Schema(
+  {
+    user: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+    },
+    valid: {
+      type: Boolean,
+      default: true,
+    },
+  },
+  {
+    methods: {},
     timestamps: {
       createdAt: "created_at",
       updatedAt: "updated_at",
     },
-  },
-})
-export class Session {
-  @prop({ ref: () => User })
-  user?: Ref<User>
+  }
+)
 
-  @prop({ default: true })
-  valid?: boolean
-}
+export type Session = InferSchemaType<typeof sessionSchema>
 
-export default getModelForClass(Session)
+const SessionModel = model("Session", sessionSchema)
+export default SessionModel
