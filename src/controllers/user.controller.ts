@@ -31,12 +31,10 @@ export async function createUserHandler(req: Request<{}, {}, CreateUserInput>, r
   } catch (error) {
     log.warn(error)
 
-    if (error instanceof mongoose.Error) {
-      // @ts-ignore
-      if (error.code === 11000) return res.status(409).send({ message: "Account already exists" })
+    // @ts-ignore
+    if (error.code === 11000) return res.status(409).send({ message: "Account already exists" })
 
-      res.status(500).send(error.message)
-    }
+    res.status(500).send(error instanceof Error && error.message)
   }
 }
 
