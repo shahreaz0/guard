@@ -1,10 +1,10 @@
 import {
-  prop,
+  type DocumentType,
+  Severity,
   getModelForClass,
   modelOptions,
-  Severity,
   pre,
-  type DocumentType,
+  prop,
 } from "@typegoose/typegoose"
 import * as argon2 from "argon2"
 

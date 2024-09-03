@@ -1,4 +1,4 @@
-import type { Request, Response, NextFunction } from "express"
+import type { NextFunction, Request, Response } from "express"
 import { verifyJwt } from "../utils/jwt"
 
 export default async function deserializeUser(req: Request, res: Response, next: NextFunction) {

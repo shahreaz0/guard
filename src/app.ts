@@ -1,11 +1,11 @@
-import express, { type ErrorRequestHandler } from "express"
-import dotenv from "dotenv"
-import morgan from "morgan"
-import CreateHttpError from "http-errors"
-import { z } from "zod"
-import helmet from "helmet"
-import cors from "cors"
 import compression from "compression"
+import cors from "cors"
+import dotenv from "dotenv"
+import express, { type ErrorRequestHandler } from "express"
+import helmet from "helmet"
+import CreateHttpError from "http-errors"
+import morgan from "morgan"
+import { z } from "zod"
 
 // router
 import router from "./routes"

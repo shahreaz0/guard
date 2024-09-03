@@ -1,6 +1,6 @@
-import { z, type AnyZodObject, ZodError } from "zod"
-import type { Request, Response, NextFunction } from "express"
+import type { NextFunction, Request, Response } from "express"
 import createHttpError from "http-errors"
+import { type AnyZodObject, ZodError, z } from "zod"
 import log from "../utils/logger"
 const validateResource =
   (schema: AnyZodObject) => async (req: Request, res: Response, next: NextFunction) => {

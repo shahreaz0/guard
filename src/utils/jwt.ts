@@ -1,6 +1,6 @@
 import { verify } from "node:crypto"
-import jwt, { type SignOptions } from "jsonwebtoken"
 import createHttpError, { CreateHttpError } from "http-errors"
+import jwt, { type SignOptions } from "jsonwebtoken"
 
 export function signJwt(payload: object, tokenType: "access" | "refresh", options?: SignOptions) {
   return new Promise((resolve, reject) => {

@@ -1,9 +1,9 @@
 import express from "express"
 const router = express.Router()
 import * as userController from "../controllers/user.controller"
+import requireUser from "../middlewares/require-user"
 import validateResource from "../middlewares/validate-resource"
 import * as schemas from "../schemas/user.schema"
-import requireUser from "../middlewares/require-user"
 
 router.post("/users", validateResource(schemas.createUserSchema), userController.createUserHandler)
 

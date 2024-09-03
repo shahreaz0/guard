@@ -1,8 +1,8 @@
 import type { DocumentType } from "@typegoose/typegoose"
 import type { User } from "../models/user.model"
 
-import { signJwt } from "../utils/jwt"
 import SessionModel from "../models/session.model"
+import { signJwt } from "../utils/jwt"
 
 export function createSession(userId: string) {
   return SessionModel.create({ user: userId })

@@ -1,18 +1,18 @@
 import type { Request, Response } from "express"
 import type {
   CreateUserInput,
-  VerifyUserInput,
   ForgotPasswordInput,
   ResetPasswordInput,
+  VerifyUserInput,
 } from "../schemas/user.schema"
-import log from "../utils/logger"
 import * as services from "../services/user.service"
+import log from "../utils/logger"
 
 import { sendEmail } from "../utils/mailer"
 
-import { generateRandomCode } from "../utils/helpers"
 import mongoose from "mongoose"
 import { User } from "../models/user.model"
+import { generateRandomCode } from "../utils/helpers"
 
 export async function createUserHandler(req: Request<{}, {}, CreateUserInput>, res: Response) {
   try {

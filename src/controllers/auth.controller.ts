@@ -5,10 +5,10 @@ import { findUserByEmail, findUserById } from "../services/user.service"
 import createHttpError from "http-errors"
 
 import {
+  deleteSessionById,
+  findSessionById,
   signAccessToken,
   signRefreshToken,
-  findSessionById,
-  deleteSessionById,
 } from "../services/auth.service"
 import { verifyJwt } from "../utils/jwt"
 
